@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Agregar Nueva Película</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f4f7f6;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+      }
+      .form-container {
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 500px;
+      }
+      h1 {
+        color: #2c3e50;
+        margin-top: 0;
+        text-align: center;
+        font-size: 26px;
+      }
+      label {
+        font-weight: bold;
+        color: #333;
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+      }
+      input,
+      textarea {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-family: inherit;
+        font-size: 14px;
+      }
+      input:focus,
+      textarea:focus {
+        border-color: #3498db;
+        outline: none;
+      }
+      textarea {
+        resize: vertical;
+        height: 100px;
+      }
+      .btn-save {
+        background: #27ae60;
+        color: white;
+        border: none;
+        padding: 12px;
+        cursor: pointer;
+        border-radius: 5px;
+        font-weight: bold;
+        width: 100%;
+        font-size: 16px;
+        transition: background 0.3s;
+      }
+      .btn-save:hover {
+        background: #219150;
+      }
+      .btn-back {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        color: #7f8c8d;
+        text-decoration: none;
+        font-size: 14px;
+      }
+      .btn-back:hover {
+        text-decoration: underline;
+        color: #2c3e50;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-container">
+      <h1>➕ Nueva Película</h1>
+      <form action="/movies" method="POST">
+        <label>Nombre de la película:</label>
+        <input type="text" name="Name" placeholder="Ej. El Padrino" required />
+
+        <label>Año de lanzamiento:</label>
+        <input type="number" name="Year" placeholder="Ej. 1972" min="1800" max="<%= new Date().getFullYear() + 5 %>" required />
+
+        <label>Director:</label>
+        <input
+          type="text"
+          name="Director"
+          placeholder="Ej. Francis Ford Coppola"
+          required
+        />
+
+        <label>Actores (separados por coma):</label>
+        <input
+          type="text"
+          name="Actors"
+          placeholder="Marlon Brando, Al Pacino, James Caan"
+          required
+        />
+
+        <label>Reseña:</label>
+        <textarea
+          name="Review"
+          placeholder="Escribe una breve reseña de la película..."
+          required
+        ></textarea>
+
+        <label>URL de la Imagen (Opcional):</label>
+        <input
+          type="url"
+          name="Image"
+          placeholder="https://ejemplo.com/imagen.jpg"
+        />
+
+        <button type="submit" class="btn-save">Guardar Película</button>
+      </form>
+
+      <a href="/movies" class="btn-back">⬅️ Volver al catálogo</a>
+    </div>
+  </body>
+</html>

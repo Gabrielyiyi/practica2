@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Editar Película</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f4f7f6;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .form-container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+
+    h1 {
+      color: #2c3e50;
+      margin-top: 0;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+      height: 100px;
+    }
+
+    .btn-save {
+      background: #f39c12;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-weight: bold;
+      width: 100%;
+    }
+
+    .btn-save:hover {
+      background: #e67e22;
+    }
+
+    .btn-back {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+      color: #7f8c8d;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="form-container">
+    <h1>✏️ Editar Película</h1>
+    <form action="/movies/<%= movie._id %>/edit" method="POST">
+      <label>Nombre:</label>
+      <input type="text" name="Name" value="<%= movie.Name %>" required />
+
+      <label>Año:</label>
+      <input type="number" name="Year" value="<%= movie.Year %>" min="1800" max="<%= new Date().getFullYear() + 5 %>"
+        required />
+
+      <label>Director:</label>
+      <input type="text" name="Director" value="<%= movie.Director %>" required />
+
+      <label>Actores (separados por coma):</label>
+      <input type="text" name="Actors" value="<%= movie.Actors.join(', ') %>" required />
+
+      <label>Reseña:</label>
+      <textarea name="Review" required><%= movie.Review %></textarea>
+
+      <label>URL de la Imagen:</label>
+      <input type="text" name="Image" value="<%= movie.Image %>" />
+
+      <button type="submit" class="btn-save">Guardar Cambios</button>
+    </form>
+
+    <a href="/movies" class="btn-back">Cancelar y Volver</a>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,112 @@
+[
+  {
+    "Name": "Inception",
+    "Year": 2010,
+    "Director": "Christopher Nolan",
+    "Review": "Una obra maestra visual y narrativa que explora el mundo de los sueños con una trama fascinante. 9.5/10",
+    "Actors": [
+      "Leonardo DiCaprio",
+      "Joseph Gordon-Levitt",
+      "Elliot Page",
+      "Tom Hardy"
+    ],
+    "Image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9T6iiPWwzjxVmtDUpTQZ-JL10jT74rPKpMQaegqsFlG6sR3HyeungVIY8Eb4PxSPm25XQoh6yJvqoyPI5hnrvp63tm9gWWofGyU8JYQ&s=10"
+  },
+  {
+    "Name": "The Matrix",
+    "Year": 1999,
+    "Director": "Lana Wachowski, Lilly Wachowski",
+    "Review": "Revolucionó el cine de ciencia ficción con sus efectos visuales y sus profundas cuestiones filosóficas. 9.8/10",
+    "Actors": [
+      "Keanu Reeves",
+      "Laurence Fishburne",
+      "Carrie-Anne Moss",
+      "Hugo Weaving"
+    ],
+    "Image": "https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg"
+  },
+  {
+    "Name": "Interstellar",
+    "Year": 2014,
+    "Director": "Christopher Nolan",
+    "Review": "Una épica aventura espacial con una banda sonora inolvidable y una historia emocionalmente poderosa. 9.2/10",
+    "Actors": [
+      "Matthew McConaughey",
+      "Anne Hathaway",
+      "Jessica Chastain",
+      "Michael Caine"
+    ],
+    "Image": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"
+  },
+  {
+    "Name": "Pulp Fiction",
+    "Year": 1994,
+    "Director": "Quentin Tarantino",
+    "Review": "Un clásico de culto con diálogos brillantes y una estructura narrativa no lineal que cambió el cine. 9.6/10",
+    "Actors": [
+      "John Travolta",
+      "Uma Thurman",
+      "Samuel L. Jackson",
+      "Bruce Willis"
+    ],
+    "Image": "https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg"
+  },
+  {
+    "Name": "The Dark Knight",
+    "Year": 2008,
+    "Director": "Christopher Nolan",
+    "Review": "La actuación de Heath Ledger eleva esta película de superhéroes a un thriller criminal de primer nivel. 9.7/10",
+    "Actors": [
+      "Christian Bale",
+      "Heath Ledger",
+      "Aaron Eckhart",
+      "Gary Oldman"
+    ],
+    "Image": "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg"
+  },
+  {
+    "Name": "Fight Club",
+    "Year": 1999,
+    "Director": "David Fincher",
+    "Review": "Una crítica oscura y audaz a la sociedad de consumo moderna, con un giro argumental icónico. 9.3/10",
+    "Actors": ["Brad Pitt", "Edward Norton", "Helena Bonham Carter"],
+    "Image": "https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg"
+  },
+  {
+    "Name": "Forrest Gump",
+    "Year": 1994,
+    "Director": "Robert Zemeckis",
+    "Review": "Una historia conmovedora que recorre décadas de historia estadounidense a través de los ojos de un hombre puro de corazón. 9.4/10",
+    "Actors": ["Tom Hanks", "Robin Wright", "Gary Sinise"],
+    "Image": "https://image.tmdb.org/t/p/w500/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg"
+  },
+  {
+    "Name": "Spirited Away",
+    "Year": 2001,
+    "Director": "Hayao Miyazaki",
+    "Review": "Una animación mágica y visualmente deslumbrante del Studio Ghibli que cautiva a todas las edades. 9.5/10",
+    "Actors": ["Rumi Hiiragi", "Miyu Irino", "Mari Natsuki"],
+    "Image": "https://image.tmdb.org/t/p/w500/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg"
+  },
+  {
+    "Name": "Parasite",
+    "Year": 2019,
+    "Director": "Bong Joon Ho",
+    "Review": "Una sátira social brillante, impredecible y llena de tensión sobre la lucha de clases. 9.6/10",
+    "Actors": [
+      "Song Kang-ho",
+      "Lee Sun-kyun",
+      "Cho Yeo-jeong",
+      "Choi Woo-shik"
+    ],
+    "Image": "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg"
+  },
+  {
+    "Name": "The Godfather",
+    "Year": 1972,
+    "Director": "Francis Ford Coppola",
+    "Review": "El pináculo del cine de gánsteres, con actuaciones legendarias y una dirección impecable. 9.9/10",
+    "Actors": ["Marlon Brando", "Al Pacino", "James Caan", "Diane Keaton"],
+    "Image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7x7p3S3NAI3LB8quQJdAC1IYTKD7pCEFKW274mrfzlQiyY5r8cHzEQPBb7Viy3isj0jMEAXOkwCjcRKPJQQz5llYMKcjSstegCsBxS0_E&s=10"
+  }
+]

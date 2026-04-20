@@ -1,0 +1,128 @@
+[
+  {
+    "username": "admin_root",
+    "email": "admin@cinemateca.com",
+    "role": "superuser",
+    "password": "adminpassword"
+  },
+  {
+    "username": "juan_perez",
+    "email": "juan.perez@email.com",
+    "role": "editor",
+    "password": "password123"
+  },
+  {
+    "username": "maria_g",
+    "email": "maria.garcia@email.com",
+    "role": "editor",
+    "password": "password123"
+  },
+  {
+    "username": "pedro_lopez",
+    "email": "pedro.lopez@email.com",
+    "role": "editor",
+    "password": "password123"
+  },
+  {
+    "username": "ana_mtz",
+    "email": "ana.martinez@email.com",
+    "role": "editor",
+    "password": "password123"
+  },
+  {
+    "username": "carlos_rod",
+    "email": "carlos.rodriguez@email.com",
+    "role": "editor",
+    "password": "password123"
+  },
+  {
+    "username": "laura_f",
+    "email": "laura.fernandez@email.com",
+    "role": "editor",
+    "password": "password123"
+  },
+  {
+    "username": "david_s",
+    "email": "david.smith@email.com",
+    "role": "editor",
+    "password": "password123"
+  },
+  {
+    "username": "sarah_j",
+    "email": "sarah.johnson@email.com",
+    "role": "editor",
+    "password": "password123"
+  },
+  {
+    "username": "michael_b",
+    "email": "michael.brown@email.com",
+    "role": "editor",
+    "password": "password123"
+  },
+  {
+    "username": "emily_d",
+    "email": "emily.davis@email.com",
+    "role": "editor",
+    "password": "password123"
+  },
+  {
+    "username": "robert_w",
+    "email": "robert.wilson@email.com",
+    "role": "reader",
+    "password": "readerpassword"
+  },
+  {
+    "username": "jessica_m",
+    "email": "jessica.miller@email.com",
+    "role": "reader",
+    "password": "readerpassword"
+  },
+  {
+    "username": "james_t",
+    "email": "james.taylor@email.com",
+    "role": "reader",
+    "password": "readerpassword"
+  },
+  {
+    "username": "ashley_a",
+    "email": "ashley.anderson@email.com",
+    "role": "reader",
+    "password": "readerpassword"
+  },
+  {
+    "username": "william_t",
+    "email": "william.thomas@email.com",
+    "role": "reader",
+    "password": "readerpassword"
+  },
+  {
+    "username": "amanda_j",
+    "email": "amanda.jackson@email.com",
+    "role": "reader",
+    "password": "readerpassword"
+  },
+  {
+    "username": "richard_w",
+    "email": "richard.white@email.com",
+    "role": "reader",
+    "password": "readerpassword"
+  },
+  {
+    "username": "jennifer_h",
+    "email": "jennifer.harris@email.com",
+    "role": "reader",
+    "password": "readerpassword"
+  },
+  {
+    "username": "joseph_m",
+    "email": "joseph.martin@email.com",
+    "role": "reader",
+    "password": "readerpassword"
+  },
+  {
+    "username": "patricia_t",
+    "email": "patricia.thompson@email.com",
+    "role": "reader",
+    "password": "readerpassword"
+  }
+]

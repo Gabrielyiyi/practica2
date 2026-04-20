@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Repositorio de Películas</title>
+  <style>
+    /* Estilos modernos y limpios */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7f6;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #2c3e50;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .user-info {
+      font-size: 14px;
+      text-align: right;
+    }
+    .btn {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: bold;
+      display: inline-block;
+    }
+    .btn-logout { background: #e74c3c; color: white; }
+    .btn-add { background: #27ae60; color: white; margin-bottom: 20px; }
+    .btn-delete { background: #c0392b; color: white; margin-top: 10px; width: 100%; }
+    
+    /* Cuadrícula de películas (Grid) */
+    .movies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .movie-card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+    }
+    .movie-card img {
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+    }
+    .movie-info {
+      padding: 15px;
+      flex-grow: 1;
+    }
+    .movie-info h3 { margin: 0 0 10px 0; color: #2c3e50; }
+    .movie-info p { margin: 5px 0; font-size: 14px; }
+    .movie-info .review { font-style: italic; color: #7f8c8d; margin-top: 10px; }
+    .empty-state { text-align: center; color: #7f8c8d; grid-column: 1 / -1; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <h1>🎬 Catálogo de Películas</h1>
+      <div class="user-info">
+        <p style="margin: 0 0 5px 0;">Hola, <strong><%= currentUser.username %></strong></p>
+        <p style="margin: 0 0 10px 0;">Nivel de acceso: <span style="text-transform: capitalize;"><%= currentUser.role %></span></p>
+        <a href="/logout" class="btn btn-logout">Cerrar Sesión</a>
+      </div>
+    </div>
+
+    <% if(currentUser.role === 'editor' || currentUser.role === 'superuser') { %>
+      <a href="/movies/new" class="btn btn-add" style="margin-bottom: 20px;">+ Agregar Nueva Película</a>
+    <% } %>
+
+    <!-- Buscador tipo Google Search -->
+    <form action="/movies" method="GET" style="margin-bottom: 20px; display: flex; gap: 10px;">
+      <input type="text" name="q" placeholder="Buscar película estilo Google Search..." value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>" style="flex-grow: 1; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
+      <button type="submit" class="btn" style="background: #3498db; color: white;">🔍 Buscar</button>
+      <% if (typeof searchQuery !== 'undefined' && searchQuery) { %>
+        <a href="/movies" class="btn" style="background: #e74c3c; color: white; display: flex; align-items: center; justify-content: center; padding: 0 15px;">Limpiar</a>
+      <% } %>
+    </form>
+
+    <div class="movies-grid">
+      <% if (movies.length === 0) { %>
+        <h3 class="empty-state">No hay películas en el repositorio todavía.</h3>
+      <% } else { %>
+        <% movies.forEach(function(movie){ %>
+          <div class="movie-card">
+            <% if(movie.Image) { %>
+              <img src="<%= movie.Image %>" alt="Poster de <%= movie.Name %>">
+            <% } else { %>
+              <div style="height: 350px; background: #bdc3c7; display: flex; align-items: center; justify-content: center; color: white;">Sin Imagen</div>
+            <% } %>
+            
+            <div class="movie-info">
+              <h3><%= movie.Name %> (<%= movie.Year %>)</h3>
+              <p><strong>Director:</strong> <%= movie.Director %></p>
+              
+              <p><strong>Actores:</strong> 
+                <%= Array.isArray(movie.Actors) ? movie.Actors.join(', ') : (movie.Actors || 'No especificados') %>
+              </p>
+              
+              <p class="review">"<%= movie.Review %>"</p>
+
+              <% 
+                 // Validar si el usuario actual puede editar o borrar
+                 let canModify = false;
+                 if (currentUser.role === 'superuser') {
+                   canModify = true;
+                 } else if (currentUser.role === 'editor' && movie.owner && movie.owner.equals(currentUser._id)) {
+                   canModify = true;
+                 }
+              %>
+
+              <% if(canModify) { %>
+                <a href="/movies/<%= movie._id %>/edit" class="btn" style="background: #f39c12; color: white; display: block; text-align: center; margin-top: 10px;">✏️ Editar Película</a>
+
+                <form action="/movies/<%= movie._id %>/delete" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta película?');">
+                  <button type="submit" class="btn btn-delete">🗑️ Eliminar Película</button>
+                </form>
+              <% } %>
+            </div>
+          </div>
+        <% }); %>
+      <% } %>
+    </div>
+  </div>
+
+</body>
+</html>
