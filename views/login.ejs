@@ -65,13 +65,16 @@
     <div class="login-card">
         <h1>🎬 Iniciar Sesión</h1>
         
+        <!-- Si Passport.js nos manda un error desde el servidor (ej. "Contraseña incorrecta"), lo inyectamos aquí -->
         <% if (typeof error !== 'undefined') { %>
             <div class="error-msg">⚠️ <%= error %></div>
         <% } %>
         
+        <!-- Formulario: Envia los datos usando el método POST (oculto en la URL) a la ruta /login -->
         <form action="/login" method="POST">
             <div class="form-group">
                 <label>Usuario:</label>
+                <!-- El 'name' debe coincidir exactamente con lo que Passport espera leer -->
                 <input type="text" name="username" placeholder="Ingresa tu usuario" required>
             </div>
             <div class="form-group">

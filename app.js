@@ -1,259 +1,223 @@
 // app.js
+
+// --- 1. IMPORTACIONES Y CONFIGURACIÓN INICIAL ---
 const express = require("express"),
   mongoose = require("mongoose"),
   passport = require("passport"),
   LocalStrategy = require("passport-local"),
   passportLocalMongoose = require("passport-local-mongoose"),
-  bcrypt = require("bcrypt"); // Importamos la librería de encriptamiento
+  bcrypt = require("bcrypt"); // Para encriptar contraseñas
 
 const User = require("./model/User");
-const Movie = require("./model/Movies"); // Nuevo modelo
+const Movie = require("./model/Movies");
 
-let app = express();
+const app = express();
 
+// --- 2. CONEXIÓN A LA BASE DE DATOS ---
 mongoose
   .connect("mongodb://localhost:27017/Peliculas")
-  .then(() => {
-    console.log(
-      "✅ Conectado exitosamente a la base de datos MongoDB (Peliculas)",
-    );
-  })
-  .catch((err) => {
-    console.log("❌ Error fatal al conectar a la base de datos:");
-    console.log(err);
-  });
+  .then(() => console.log("✅ Conectado exitosamente a MongoDB (Peliculas)"))
+  .catch((err) => console.log("❌ Error al conectar a la base de datos:", err));
 
-app.set("view engine", "ejs");
-app.use(express.urlencoded({ extended: true }));
+// --- 3. CONFIGURACIÓN DE EXPRESS Y MIDDLEWARES ---
+app.set("view engine", "ejs"); // Usar EJS como motor de plantillas
+app.use(express.urlencoded({ extended: true })); // Para procesar datos de formularios
+
+// Configuración de sesiones (mantiene a los usuarios logueados de forma segura)
 app.use(
   require("express-session")({
     secret: "Rusty is a dog",
     resave: false,
     saveUninitialized: false,
-  }),
+  })
 );
 
+// Inicializar Passport (Sistema de Autenticación)
 app.use(passport.initialize());
 app.use(passport.session());
 
+// --- 4. ESTRATEGIA DE AUTENTICACIÓN (LOGIN) ---
+// Aquí le enseñamos a Passport cómo validar a un usuario cuando intenta iniciar sesión
 passport.use(
   new LocalStrategy(async function (username, password, done) {
     try {
-      // 1. Busca al usuario en la base de datos
+      // 1. Buscamos si el usuario existe en la base de datos
       const user = await User.findOne({ username: username });
+      if (!user) return done(null, false, { message: "Usuario no encontrado" });
 
-      // 2. Si no existe el usuario, falla
-      if (!user) {
-        return done(null, false, { message: "Usuario no encontrado" });
-      }
-
-      // 3. Comparamos la contraseña encriptada (o en texto plano si es de los usuarios antiguos)
+      // 2. Verificamos la contraseña
       let isMatch = false;
-
-      // Si la contraseña guardada en BD comienza con el formato clásico de bcrypt (ej. $2b$) 
       if (user.password && user.password.startsWith("$2b$")) {
+        // Si la contraseña ya está encriptada, la comparamos
         isMatch = await bcrypt.compare(password, user.password);
       } else {
-        // Si es un usuario VIEJO que la tiene en texto plano
+        // Si es una contraseña vieja en texto plano, la aceptamos y la encriptamos para el futuro
         if (user.password === password) {
           isMatch = true;
-
-          // ACTUALIZACIÓN SILENCIOSA: Encriptar automática esta contraseña para el futuro
           const salt = await bcrypt.genSalt(10);
           user.password = await bcrypt.hash(password, salt);
           await user.save();
         }
       }
 
-      if (isMatch) {
-        return done(null, user); // Login exitoso
-      } else {
-        return done(null, false, { message: "Contraseña incorrecta" }); // Login fallido
-      }
+      // 3. Devolvemos el resultado del login
+      if (isMatch) return done(null, user); // Éxito
+      else return done(null, false, { message: "Contraseña incorrecta" }); // Fallo
     } catch (err) {
       return done(err);
     }
-  }),
+  })
 );
+
+// Serializar y deserializar usuario (Guardar y leer la sesión en las cookies del navegador)
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// Middleware MUY IMPORTANTE: Pasa el usuario actual a TODAS las vistas EJS
+// Middleware Global: Hace que la variable 'currentUser' esté disponible en TODOS los archivos EJS
+// Así podemos mostrar el nombre del usuario o botones distintos según si está logueado o no.
 app.use(function (req, res, next) {
   res.locals.currentUser = req.user;
   next();
 });
 
-// --- MIDDLEWARES DE AUTORIZACIÓN (ROLES) ---
+// --- 5. CONTROL DE ACCESOS (ROLES Y PERMISOS) ---
+
+// Verifica si el usuario inició sesión
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) return next();
   res.redirect("/login");
 }
 
+// Verifica si el usuario tiene permisos para editar/crear (Editor o Superusuario)
 function isEditor(req, res, next) {
-  if (
-    req.isAuthenticated() &&
-    (req.user.role === "editor" || req.user.role === "superuser")
-  ) {
+  if (req.isAuthenticated() && (req.user.role === "editor" || req.user.role === "superuser")) {
     return next();
   }
   res.status(403).send("Acceso denegado: Se requieren permisos de Editor.");
 }
 
-function isSuperUser(req, res, next) {
-  if (req.isAuthenticated() && req.user.role === "superuser") {
-    return next();
-  }
-  res
-    .status(403)
-    .send("Acceso denegado: Solo el Súper Usuario puede hacer esto.");
-}
+// --- 6. RUTAS DE AUTENTICACIÓN ---
 
-// --- RUTAS DE AUTENTICACIÓN ---
-app.get("/", function (req, res) {
-  res.render("home");
-});
+// Página de inicio
+app.get("/", (req, res) => res.render("home"));
 
-app.get("/register", function (req, res) {
-  res.render("register", { error: null });
-});
+// Mostrar formulario de registro
+app.get("/register", (req, res) => res.render("register", { error: null }));
 
+// Procesar el registro de un nuevo usuario en la base de datos
 app.post("/register", async (req, res) => {
   try {
-    // Validaciones básicas de servidor
     if (!req.body.username || !req.body.email || !req.body.password) {
-      return res.render("register", { error: "Todos los campos (usuario, email, contraseña) son obligatorios." });
+      return res.render("register", { error: "Todos los campos son obligatorios." });
     }
 
-    // ENCRIPTAR: Hasheamos la contraseña de texto plano (10 pasadas de salto)
+    // Encriptar la contraseña antes de guardarla por seguridad
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
 
     const newUser = new User({
       username: req.body.username,
       email: req.body.email,
-      role: "reader", // Siempre forzar 'reader' para nuevas cuentas
-      password: hashedPassword, // ¡Añadimos la contraseña encriptada aquí de forma segura!
+      role: "reader", // Rol por defecto para nuevos registros
+      password: hashedPassword,
     });
 
-    // Cambiamos User.register por el método tradicional de guardado (.save)
     await newUser.save();
-
     res.redirect("/login");
   } catch (error) {
+    // Si el error es 11000, significa que el usuario o correo ya existe en MongoDB
     if (error.code === 11000) {
-      // Error de duplicado de MongoDB (usuario o email)
       const field = Object.keys(error.keyValue)[0];
-      return res.render("register", { error: `El ${field} ya está en uso. Por favor, elige otro.` });
+      return res.render("register", { error: `El ${field} ya está en uso.` });
     }
-    // Otro tipo de error (ej. validación)
     res.render("register", { error: "Error al registrar: " + error.message });
   }
 });
 
-// Ruta para mostrar el formulario de login
-app.get("/login", function (req, res) {
-  res.render("login");
-});
+// Mostrar formulario de login
+app.get("/login", (req, res) => res.render("login"));
 
-// Ruta que procesa el login con mensajes de error
-app.post("/login", function (req, res, next) {
+// Procesar el login
+app.post("/login", (req, res, next) => {
   passport.authenticate("local", function (err, user, info) {
-    if (err) {
-      return next(err);
-    }
+    if (err) return next(err);
+    if (!user) return res.render("login", { error: info.message }); // Si falla, mostrar error en pantalla
 
-    // Si el usuario no existe o la contraseña es mala, 'user' será falso.
-    // 'info.message' contendrá el texto de error que pusimos arriba.
-    if (!user) {
-      return res.render("login", { error: info.message });
-    }
-
-    // Si todo está bien, iniciamos la sesión
     req.logIn(user, function (err) {
-      if (err) {
-        return next(err);
-      }
+      if (err) return next(err);
       return res.redirect("/movies");
     });
   })(req, res, next);
 });
 
-// Ruta de logout
-app.get("/logout", function (req, res, next) {
-  req.logout(function (err) {
-    if (err) {
-      return next(err);
-    }
+// Procesar el cierre de sesión
+app.get("/logout", (req, res, next) => {
+  req.logout((err) => {
+    if (err) return next(err);
     res.redirect("/");
   });
 });
 
-// --- RUTAS DE PELÍCULAS (CRUD) ---
+// --- 7. RUTAS DE PELÍCULAS (CRUD) ---
 
-// 1. LEER (Mostrar todas las películas) - Lectores, Editores y Superusuarios
+// LEER (READ): Muestra todas las películas y permite buscar
 app.get("/movies", isLoggedIn, async (req, res) => {
   let query = {};
-  // Si existe ?q= en la URL, filtramos por nombre (parecido a Google Search)
   if (req.query.q) {
-    query = { Name: { $regex: req.query.q, $options: "i" } };
+    // Búsqueda inteligente ignorando mayúsculas y minúsculas ($regex y $options: "i")
+    query = { Name: { $regex: req.query.q, $options: "i" } }; 
   }
   const movies = await Movie.find(query);
   res.render("movies", { movies, searchQuery: req.query.q || "" });
 });
 
-// 2. CREAR (Formulario) - Solo Editores y Superusuarios
-app.get("/movies/new", isEditor, (req, res) => {
-  res.render("new-movie");
-});
+// CREAR (CREATE) - Vista: Muestra el formulario vacío
+app.get("/movies/new", isEditor, (req, res) => res.render("new-movie"));
 
-// 2.1 CREAR (Lógica para guardar en BD)
+// CREAR (CREATE) - Lógica: Guarda la nueva película en la base de datos
 app.post("/movies", isEditor, async (req, res) => {
   try {
+    // Convertimos el string de actores separados por coma a un Arreglo (Array)
     const actorsArray = req.body.Actors ? req.body.Actors.split(",").map((actor) => actor.trim()) : [];
-    // Assign req.user._id as owner
+    // Asociamos la película al usuario que la está creando (owner) para permisos futuros
     const newMovie = { ...req.body, Actors: actorsArray, owner: req.user._id };
     await Movie.create(newMovie);
     res.redirect("/movies");
   } catch (err) {
-    console.log("Error al crear película:", err);
-    res.status(400).send(`<h2>Error de validación al crear la película</h2><p>${err.message}</p><a href='/movies/new'>Volver atrás</a>`);
+    res.status(400).send(`<h2>Error al crear la película</h2><p>${err.message}</p><a href='/movies/new'>Volver atrás</a>`);
   }
 });
 
-// 3. BORRAR - Solo el creador o Superusuarios
+// BORRAR (DELETE): Elimina una película solo si eres el dueño original o un superusuario
 app.post("/movies/:id/delete", isEditor, async (req, res) => {
   try {
     const movie = await Movie.findById(req.params.id);
     if (!movie) return res.redirect("/movies");
 
-    // Autorizar si es superusuario o si es el dueño
+    // Validar que quien intenta borrar sea el dueño o el administrador principal
     if (req.user.role === "superuser" || (movie.owner && movie.owner.equals(req.user._id))) {
       await Movie.findByIdAndDelete(req.params.id);
     }
     res.redirect("/movies");
   } catch (err) {
-    console.log("Error al borrar:", err);
     res.redirect("/movies");
   }
 });
 
-// 4. MOSTRAR FORMULARIO DE EDICIÓN (Solo creador o Superusuarios)
+// ACTUALIZAR (UPDATE) - Vista: Muestra formulario rellenado con los datos actuales
 app.get("/movies/:id/edit", isEditor, async (req, res) => {
   try {
     const movie = await Movie.findById(req.params.id);
-    // Verificar permisos
     if (req.user.role !== "superuser" && (!movie.owner || !movie.owner.equals(req.user._id))) {
       return res.status(403).send("Acceso denegado: Solo puedes editar tus propias películas.");
     }
     res.render("edit", { movie });
   } catch (err) {
-    console.log(err);
     res.redirect("/movies");
   }
 });
 
-// 5. ACTUALIZAR PELÍCULA EN LA BD
+// ACTUALIZAR (UPDATE) - Lógica: Sobreescribe los datos nuevos en la base de datos
 app.post("/movies/:id/edit", isEditor, async (req, res) => {
   try {
     const checkMovie = await Movie.findById(req.params.id);
@@ -261,20 +225,19 @@ app.post("/movies/:id/edit", isEditor, async (req, res) => {
       return res.status(403).send("Acceso denegado: Solo puedes editar tus propias películas.");
     }
 
-    // Convertimos la cadena de actores "Actor 1, Actor 2" en un arreglo de nuevo
     const actorsArray = req.body.Actors ? req.body.Actors.split(",").map((actor) => actor.trim()) : [];
     const updatedMovie = { ...req.body, Actors: actorsArray };
 
-    // runValidators: true es necesario en update para que Mongoose valide las reglas del schema
+    // runValidators: true obliga a Mongoose a respetar las reglas del schema al actualizar
     await Movie.findByIdAndUpdate(req.params.id, updatedMovie, { runValidators: true });
     res.redirect("/movies");
   } catch (err) {
-    console.log("Error al actualizar:", err);
-    res.status(400).send(`<h2>Error de validación al editar la película</h2><p>${err.message}</p><a href='/movies/${req.params.id}/edit'>Volver atrás</a>`);
+    res.status(400).send(`<h2>Error al editar la película</h2><p>${err.message}</p><a href='/movies/${req.params.id}/edit'>Volver atrás</a>`);
   }
 });
 
-let port = process.env.PORT || 3000;
+// --- 8. ARRANQUE DEL SERVIDOR ---
+const port = process.env.PORT || 3000;
 app.listen(port, "0.0.0.0", function () {
-  console.log("Server Has Started on http://localhost:3000 y está accesible por IP externa");
+  console.log("🚀 Servidor en línea: http://localhost:3000 (Accesible por red local)");
 });

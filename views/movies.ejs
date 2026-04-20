@@ -82,18 +82,21 @@
     <div class="header">
       <h1>🎬 Catálogo de Películas</h1>
       <div class="user-info">
+        <!-- Mostramos dinámicamente el nombre y rol del usuario logueado usando la variable currentUser que enviamos desde app.js -->
         <p style="margin: 0 0 5px 0;">Hola, <strong><%= currentUser.username %></strong></p>
         <p style="margin: 0 0 10px 0;">Nivel de acceso: <span style="text-transform: capitalize;"><%= currentUser.role %></span></p>
         <a href="/logout" class="btn btn-logout">Cerrar Sesión</a>
       </div>
     </div>
 
+    <!-- BOTÓN RESTRINGIDO: Si el usuario es simple 'reader', este botón no se imprimirá en el HTML -->
     <% if(currentUser.role === 'editor' || currentUser.role === 'superuser') { %>
       <a href="/movies/new" class="btn btn-add" style="margin-bottom: 20px;">+ Agregar Nueva Película</a>
     <% } %>
 
-    <!-- Buscador tipo Google Search -->
+    <!-- BUSCADOR -->
     <form action="/movies" method="GET" style="margin-bottom: 20px; display: flex; gap: 10px;">
+      <!-- El value conserva lo que el usuario buscó para que no se borre de la barrita al recargar -->
       <input type="text" name="q" placeholder="Buscar película estilo Google Search..." value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>" style="flex-grow: 1; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
       <button type="submit" class="btn" style="background: #3498db; color: white;">🔍 Buscar</button>
       <% if (typeof searchQuery !== 'undefined' && searchQuery) { %>
@@ -102,9 +105,12 @@
     </form>
 
     <div class="movies-grid">
+      <!-- Verificamos si la base de datos nos mandó películas. Si el arreglo está vacío, mostramos un mensaje. -->
       <% if (movies.length === 0) { %>
         <h3 class="empty-state">No hay películas en el repositorio todavía.</h3>
       <% } else { %>
+        
+        <!-- CICLO FOR-EACH: Repite esta tarjeta (card) por CADA película que encontró la base de datos -->
         <% movies.forEach(function(movie){ %>
           <div class="movie-card">
             <% if(movie.Image) { %>
@@ -123,8 +129,11 @@
               
               <p class="review">"<%= movie.Review %>"</p>
 
+              <!-- LÓGICA DE PERMISOS DE EDICIÓN:
+                   Solo mostramos los botones de Editar/Borrar si:
+                   1. Es un SuperUsuario (puede borrar TODO)
+                   2. Es un Editor Y además es el "Dueño" de la película (el owner coincide con el id del usuario actual) -->
               <% 
-                 // Validar si el usuario actual puede editar o borrar
                  let canModify = false;
                  if (currentUser.role === 'superuser') {
                    canModify = true;
