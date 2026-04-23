@@ -1,6 +1,5 @@
 // model/User.js
 const mongoose = require("mongoose");
-const passportLocalMongoose = require("passport-local-mongoose");
 
 // Definimos el "Esquema" (Schema) para los Usuarios.
 // Esto actúa como un molde que asegura que todos los usuarios 
