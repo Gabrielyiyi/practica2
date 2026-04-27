@@ -248,4 +248,10 @@ app.post("/movies/:id/delete", isLoggedIn, isEditor, isOwner, async (req, res) =
   }
 });
 
-app.listen(3000, () => console.log("🚀 Servidor en http://localhost:3000"));
+const PORT = 3000;
+const HOST = '0.0.0.0'; // Escucha en la red local
+
+app.listen(PORT, HOST, () => {
+  console.log(`🚀 Servidor disponible en:`);
+  console.log(`   Local:   http://localhost:${PORT}`);
+});
