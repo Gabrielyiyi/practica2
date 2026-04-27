@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Repositorio de Películas</title>
   <style>
-    /* Estilos modernos y limpios */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f4f7f6;
@@ -26,14 +25,8 @@
       border-radius: 8px;
       margin-bottom: 20px;
     }
-    .header h1 {
-      margin: 0;
-      font-size: 24px;
-    }
-    .user-info {
-      font-size: 14px;
-      text-align: right;
-    }
+    .header h1 { margin: 0; font-size: 24px; }
+    .user-info { font-size: 14px; text-align: right; }
     .btn {
       padding: 8px 15px;
       border: none;
@@ -44,13 +37,12 @@
       display: inline-block;
     }
     .btn-logout { background: #e74c3c; color: white; }
-    .btn-add { background: #27ae60; color: white; margin-bottom: 20px; }
-    .btn-delete { background: #c0392b; color: white; margin-top: 10px; width: 100%; }
-    
-    /* Cuadrícula de películas (Grid) */
+    .btn-add    { background: #27ae60; color: white; margin-bottom: 20px; }
+
+    /* Grid de tarjetas */
     .movies-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
       gap: 20px;
     }
     .movie-card {
@@ -60,20 +52,173 @@
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       display: flex;
       flex-direction: column;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .movie-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     }
     .movie-card img {
       width: 100%;
-      height: 350px;
+      height: 300px;
       object-fit: cover;
     }
-    .movie-info {
-      padding: 15px;
+    .movie-card .no-img {
+      height: 300px;
+      background: #bdc3c7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 14px;
+    }
+    .card-body { padding: 12px; flex-grow: 1; }
+    .card-body h3 { margin: 0 0 4px 0; color: #2c3e50; font-size: 15px; }
+    .card-body p  { margin: 0; font-size: 13px; color: #7f8c8d; }
+    .empty-state  { text-align: center; color: #7f8c8d; grid-column: 1 / -1; }
+
+    /* ── OVERLAY ── */
+    #overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.50);
+      z-index: 100;
+      backdrop-filter: blur(3px);
+      justify-content: center;
+      align-items: center;
+    }
+    #overlay.active { display: flex; }
+
+    /* ── PANEL LATERAL ── */
+    #detail-panel {
+      position: relative;
+      width: 480px;
+      max-width: 95vw;
+      max-height: 90vh;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      z-index: 101;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: scale(0.92);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    #detail-panel.open {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+    }
+
+    .panel-header {
+      background: #2c3e50;
+      color: white;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      border-radius: 12px 12px 0 0;
+    }
+    .panel-header h2 { margin: 0; font-size: 17px; }
+    #btn-close-panel {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    #panel-img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    #panel-no-img {
+      width: 100%;
+      height: 160px;
+      background: #bdc3c7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .panel-body {
+      padding: 20px;
+      overflow-y: auto;
       flex-grow: 1;
     }
-    .movie-info h3 { margin: 0 0 10px 0; color: #2c3e50; }
-    .movie-info p { margin: 5px 0; font-size: 14px; }
-    .movie-info .review { font-style: italic; color: #7f8c8d; margin-top: 10px; }
-    .empty-state { text-align: center; color: #7f8c8d; grid-column: 1 / -1; }
+    .panel-body h3 {
+      margin: 0 0 4px 0;
+      color: #2c3e50;
+      font-size: 20px;
+    }
+    .panel-year {
+      font-size: 13px;
+      color: #7f8c8d;
+      margin: 0 0 16px 0;
+    }
+    .panel-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      align-items: flex-start;
+      font-size: 14px;
+    }
+    .panel-label {
+      font-weight: bold;
+      color: #2c3e50;
+      min-width: 70px;
+      flex-shrink: 0;
+    }
+    .panel-value { color: #444; }
+    .panel-review {
+      margin-top: 16px;
+      padding: 14px;
+      background: #f4f7f6;
+      border-left: 4px solid #2c3e50;
+      border-radius: 4px;
+      font-style: italic;
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+    }
+    .panel-actions {
+      padding: 16px 20px;
+      border-top: 1px solid #ecf0f1;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .panel-actions a,
+    .panel-actions button {
+      text-align: center;
+      padding: 10px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .btn-edit { background: #f39c12; color: white; }
+    .btn-del  { background: #c0392b; color: white; }
+    .btn-edit:hover { background: #e67e22; }
+    .btn-del:hover  { background: #a93226; }
   </style>
 </head>
 <body>
@@ -82,79 +227,161 @@
     <div class="header">
       <h1>Catálogo de Películas</h1>
       <div class="user-info">
-        <!-- Mostramos dinámicamente el nombre y rol del usuario logueado usando la variable currentUser que enviamos desde app.js -->
-        <p style="margin: 0 0 5px 0;">Hola, <strong><%= currentUser.username %></strong></p>
-        <p style="margin: 0 0 10px 0;">Nivel de acceso: <span style="text-transform: capitalize;"><%= currentUser.role %></span></p>
+        <p style="margin:0 0 5px 0">Hola, <strong><%= currentUser.username %></strong></p>
+        <p style="margin:0 0 10px 0">Nivel: <span style="text-transform:capitalize"><%= currentUser.role %></span></p>
         <a href="/logout" class="btn btn-logout">Cerrar Sesión</a>
       </div>
     </div>
 
-    <!-- BOTÓN RESTRINGIDO: Si el usuario es simple 'reader', este botón no se imprimirá en el HTML -->
     <% if(currentUser.role === 'editor' || currentUser.role === 'superuser') { %>
-      <a href="/movies/new" class="btn btn-add" style="margin-bottom: 20px;">+ Agregar Nueva Película</a>
+      <a href="/movies/new" class="btn btn-add">+ Agregar Nueva Película</a>
     <% } %>
 
     <!-- BUSCADOR -->
-    <form action="/movies" method="GET" style="margin-bottom: 20px; display: flex; gap: 10px;">
-      <!-- El value conserva lo que el usuario buscó para que no se borre de la barrita al recargar -->
-      <input type="text" name="q" placeholder="Buscar película..." value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>" style="flex-grow: 1; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
-      <button type="submit" class="btn" style="background: #3498db; color: white;"> Buscar</button>
+    <form action="/movies" method="GET" style="margin-bottom:20px; display:flex; gap:10px;">
+      <input type="text" name="q" placeholder="Buscar película..."
+        value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+        style="flex-grow:1; padding:10px; border-radius:5px; border:1px solid #ccc; font-size:16px;">
+      <button type="submit" class="btn" style="background:#3498db; color:white;">Buscar</button>
       <% if (typeof searchQuery !== 'undefined' && searchQuery) { %>
-        <a href="/movies" class="btn" style="background: #e74c3c; color: white; display: flex; align-items: center; justify-content: center; padding: 0 15px;">Limpiar</a>
+        <a href="/movies" class="btn" style="background:#e74c3c; color:white; display:flex; align-items:center; padding:0 15px;">Limpiar</a>
       <% } %>
     </form>
 
+    <!-- GRID -->
     <div class="movies-grid">
-      <!-- Verificamos si la base de datos nos mandó películas. Si el arreglo está vacío, mostramos un mensaje. -->
       <% if (movies.length === 0) { %>
         <h3 class="empty-state">No hay películas en el repositorio todavía.</h3>
       <% } else { %>
-        
-        <!-- CICLO FOR-EACH: Repite esta tarjeta (card) por CADA película que encontró la base de datos -->
         <% movies.forEach(function(movie){ %>
-          <div class="movie-card">
+          <%
+            let canModify = false;
+            if (currentUser.role === 'superuser') {
+              canModify = true;
+            } else if (currentUser.role === 'editor' && movie.owner && movie.owner.equals(currentUser._id)) {
+              canModify = true;
+            }
+            // Preparar strings seguros para pasar al JS
+            const safeName     = (movie.Name     || '').replace(/'/g, "\\'").replace(/\n/g, ' ');
+            const safeDirector = (movie.Director || '').replace(/'/g, "\\'").replace(/\n/g, ' ');
+            const safeActors   = (Array.isArray(movie.Actors) ? movie.Actors.join(', ') : '').replace(/'/g, "\\'");
+            const safeReview   = (movie.Review   || '').replace(/'/g, "\\'").replace(/\n/g, ' ');
+            const safeImage    = (movie.Image    || '').replace(/'/g, "\\'");
+          %>
+          <div class="movie-card"
+            onclick="openPanel(
+              '<%= movie._id %>',
+              '<%= safeName %>',
+              '<%= movie.Year %>',
+              '<%= safeDirector %>',
+              '<%= safeActors %>',
+              '<%= safeReview %>',
+              '<%= safeImage %>',
+              <%= canModify %>
+            )">
             <% if(movie.Image) { %>
-              <img src="<%= movie.Image %>" alt="Poster de <%= movie.Name %>">
+              <img src="<%= movie.Image %>" alt="<%= movie.Name %>">
             <% } else { %>
-              <div style="height: 350px; background: #bdc3c7; display: flex; align-items: center; justify-content: center; color: white;">Sin Imagen</div>
+              <div class="no-img">Sin Imagen</div>
             <% } %>
-            
-            <div class="movie-info">
+            <div class="card-body">
               <h3><%= movie.Name %> (<%= movie.Year %>)</h3>
-              <p><strong>Director:</strong> <%= movie.Director %></p>
-              
-              <p><strong>Actores:</strong> 
-                <%= Array.isArray(movie.Actors) ? movie.Actors.join(', ') : (movie.Actors || 'No especificados') %>
-              </p>
-              
-              <p class="review">"<%= movie.Review %>"</p>
-
-              <!-- LÓGICA DE PERMISOS DE EDICIÓN:
-                   Solo mostramos los botones de Editar/Borrar si:
-                   1. Es un SuperUsuario (puede borrar TODO)
-                   2. Es un Editor Y además es el "Dueño" de la película (el owner coincide con el id del usuario actual) -->
-              <% 
-                 let canModify = false;
-                 if (currentUser.role === 'superuser') {
-                   canModify = true;
-                 } else if (currentUser.role === 'editor' && movie.owner && movie.owner.equals(currentUser._id)) {
-                   canModify = true;
-                 }
-              %>
-
-              <% if(canModify) { %>
-                <a href="/movies/<%= movie._id %>/edit" class="btn" style="background: #f39c12; color: white; display: block; text-align: center; margin-top: 10px;"> Editar Película</a>
-
-                <form action="/movies/<%= movie._id %>/delete" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta película?');">
-                  <button type="submit" class="btn btn-delete"> Eliminar Película</button>
-                </form>
-              <% } %>
+              <p><%= movie.Director %></p>
             </div>
           </div>
         <% }); %>
       <% } %>
     </div>
   </div>
+
+  <!-- OVERLAY + MODAL CENTRADO -->
+  <div id="overlay" onclick="handleOverlayClick(event)">
+
+    <!-- PANEL CENTRAL -->
+    <div id="detail-panel">
+      <div class="panel-header">
+        <h2 id="panel-title">Detalle de Película</h2>
+        <button id="btn-close-panel" onclick="closePanel()">✕</button>
+      </div>
+
+      <img id="panel-img" src="" alt="" style="display:none;">
+      <div id="panel-no-img" style="display:none;">Sin Imagen</div>
+
+      <div class="panel-body">
+        <h3 id="panel-name"></h3>
+        <p class="panel-year" id="panel-year"></p>
+
+        <div class="panel-row">
+          <span class="panel-label">Director</span>
+          <span class="panel-value" id="panel-director"></span>
+        </div>
+        <div class="panel-row">
+          <span class="panel-label">Actores</span>
+          <span class="panel-value" id="panel-actors"></span>
+        </div>
+
+        <div class="panel-review" id="panel-review"></div>
+      </div>
+
+      <div class="panel-actions" id="panel-actions" style="display:none;">
+        <a id="btn-edit-link" href="#" class="btn-edit">✏️ Editar Película</a>
+        <form id="form-delete" method="POST"
+          onsubmit="return confirm('¿Seguro que deseas eliminar esta película?');">
+          <button type="submit" class="btn-del">🗑️ Eliminar Película</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function openPanel(id, name, year, director, actors, review, image, canModify) {
+      document.getElementById('panel-title').textContent    = name;
+      document.getElementById('panel-name').textContent     = name;
+      document.getElementById('panel-year').textContent     = 'Año: ' + year;
+      document.getElementById('panel-director').textContent = director;
+      document.getElementById('panel-actors').textContent   = actors || 'No especificados';
+      document.getElementById('panel-review').textContent   = '"' + review + '"';
+
+      const img   = document.getElementById('panel-img');
+      const noImg = document.getElementById('panel-no-img');
+      if (image) {
+        img.src          = image;
+        img.alt          = name;
+        img.style.display = 'block';
+        noImg.style.display = 'none';
+      } else {
+        img.style.display  = 'none';
+        noImg.style.display = 'flex';
+      }
+
+      const actions = document.getElementById('panel-actions');
+      if (canModify) {
+        document.getElementById('btn-edit-link').href  = '/movies/' + id + '/edit';
+        document.getElementById('form-delete').action  = '/movies/' + id + '/delete';
+        actions.style.display = 'flex';
+      } else {
+        actions.style.display = 'none';
+      }
+
+      document.getElementById('overlay').classList.add('active');
+      document.getElementById('detail-panel').classList.add('open');
+    }
+
+    function handleOverlayClick(e) {
+      // Solo cierra si el clic fue en el fondo (no dentro del modal)
+      if (e.target === document.getElementById('overlay')) closePanel();
+    }
+
+    function closePanel() {
+      document.getElementById('overlay').classList.remove('active');
+      document.getElementById('detail-panel').classList.remove('open');
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closePanel();
+    });
+  </script>
 
 </body>
 </html>

@@ -1,5 +1,6 @@
 // model/User.js
 const mongoose = require("mongoose");
+const passportLocalMongoose = require("passport-local-mongoose");
 
 // Definimos el "Esquema" (Schema) para los Usuarios.
 // Esto actúa como un molde que asegura que todos los usuarios 
@@ -20,14 +21,10 @@ const UserSchema = new mongoose.Schema(
       // "match" usa una Expresión Regular para validar matemáticamente que el texto tenga formato de correo (@ y .com)
       match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, "Por favor, introduce un correo electrónico válido"]
     },
-    password: {
-      type: String,
-      required: [true, "La contraseña es obligatoria"] // Nota: Aquí se guardará la contraseña encriptada (Hash), NUNCA en texto plano
-    },
     role: {
       type: String,
       enum: ["reader", "editor", "superuser"], // "enum" restringe los valores: la base de datos SOLO aceptará estas 3 palabras
-      default: "reader", // Si al registrarse no le asignamos un rol, automáticamente se le pondrá "reader"
+      default: "editor", // Si al registrarse no le asignamos un rol, automáticamente se le pondrá "editor"
     },
   },
   { collection: "Users" }, // Especificamos exactamente en qué "colección" de MongoDB se guardarán

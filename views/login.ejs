@@ -66,7 +66,7 @@
         <h1>Iniciar Sesión</h1>
         
         <!-- Si Passport.js nos manda un error desde el servidor (ej. "Contraseña incorrecta"), lo inyectamos aquí -->
-        <% if (typeof error !== 'undefined') { %>
+        <% if (typeof error !== 'undefined' && error) { %>
             <div class="error-msg">⚠️ <%= error %></div>
         <% } %>
         <% if (typeof message !== 'undefined' && message) { %>
