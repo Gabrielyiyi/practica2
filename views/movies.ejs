@@ -261,24 +261,18 @@
             } else if (currentUser.role === 'editor' && movie.owner && movie.owner.equals(currentUser._id)) {
               canModify = true;
             }
-            // Preparar strings seguros para pasar al JS
-            const safeName     = (movie.Name     || '').replace(/'/g, "\\'").replace(/\n/g, ' ');
-            const safeDirector = (movie.Director || '').replace(/'/g, "\\'").replace(/\n/g, ' ');
-            const safeActors   = (Array.isArray(movie.Actors) ? movie.Actors.join(', ') : '').replace(/'/g, "\\'");
-            const safeReview   = (movie.Review   || '').replace(/'/g, "\\'").replace(/\n/g, ' ');
-            const safeImage    = (movie.Image    || '').replace(/'/g, "\\'");
+            const actorsStr = Array.isArray(movie.Actors) ? movie.Actors.join(', ') : '';
           %>
           <div class="movie-card"
-            onclick="openPanel(
-              '<%= movie._id %>',
-              '<%= safeName %>',
-              '<%= movie.Year %>',
-              '<%= safeDirector %>',
-              '<%= safeActors %>',
-              '<%= safeReview %>',
-              '<%= safeImage %>',
-              <%= canModify %>
-            )">
+            data-id="<%= movie._id %>"
+            data-name="<%= movie.Name %>"
+            data-year="<%= movie.Year %>"
+            data-director="<%= movie.Director || '' %>"
+            data-actors="<%= actorsStr %>"
+            data-review="<%= movie.Review || '' %>"
+            data-image="<%= movie.Image || '' %>"
+            data-can-modify="<%= canModify %>"
+            onclick="openPanel(this)">
             <% if(movie.Image) { %>
               <img src="<%= movie.Image %>" alt="<%= movie.Name %>">
             <% } else { %>
@@ -335,7 +329,16 @@
   </div>
 
   <script>
-    function openPanel(id, name, year, director, actors, review, image, canModify) {
+    function openPanel(el) {
+      const id        = el.dataset.id;
+      const name      = el.dataset.name;
+      const year      = el.dataset.year;
+      const director  = el.dataset.director;
+      const actors    = el.dataset.actors;
+      const review    = el.dataset.review;
+      const image     = el.dataset.image;
+      const canModify = el.dataset.canModify === 'true';
+
       document.getElementById('panel-title').textContent    = name;
       document.getElementById('panel-name').textContent     = name;
       document.getElementById('panel-year').textContent     = 'Año: ' + year;
@@ -346,19 +349,19 @@
       const img   = document.getElementById('panel-img');
       const noImg = document.getElementById('panel-no-img');
       if (image) {
-        img.src          = image;
-        img.alt          = name;
-        img.style.display = 'block';
+        img.src             = image;
+        img.alt             = name;
+        img.style.display   = 'block';
         noImg.style.display = 'none';
       } else {
-        img.style.display  = 'none';
+        img.style.display   = 'none';
         noImg.style.display = 'flex';
       }
 
       const actions = document.getElementById('panel-actions');
       if (canModify) {
-        document.getElementById('btn-edit-link').href  = '/movies/' + id + '/edit';
-        document.getElementById('form-delete').action  = '/movies/' + id + '/delete';
+        document.getElementById('btn-edit-link').href = '/movies/' + id + '/edit';
+        document.getElementById('form-delete').action = '/movies/' + id + '/delete';
         actions.style.display = 'flex';
       } else {
         actions.style.display = 'none';
