@@ -1,68 +1,33 @@
-[
-  {
-    "username": "admin_root",
-    "email": "admin@cinemateca.com",
-    "role": "superuser",
-    "password": "adminpassword"
+[{
+  "_id": {
+    "$oid": "69eebf5eea0aa2b64d63a0c8"
   },
-  {
-    "username": "juan_perez",
-    "email": "juan.perez@email.com",
-    "role": "editor",
-    "password": "password123"
+  "username": "admin_root",
+  "email": "ejemplo@ejemplo.com",
+  "role": "superuser",
+  "salt": "ce15565364043ed59c955b5e731dedfe55ddec11d7ae8348368ef0cc705f9fae",
+  "hash": "f5422f479e92ddab7718a131db5f11b957126bc28f68b4f1cde866b8597b3c417a9a1e2ab1be4a892ffb85e984fea6ae81283cfc5a23e2b59e0a7440984613e11969f5487694dcfdf6b96c26300f918cc75bf2d9c0458f0b24d1786c20c0dc55cd187b36d82b312fa63a3549b8c5bfcbcb0b31da41c5762adc0bf13061b03e96419a14e18e728bf7602a798cc3e31ac83a0f638260164e43c59eeacbe21a4034e2925ea455558d84ec45c377799bf7b25819e8ac6f1b7faba3127855d8afc22a82cc32f11669e83f5a678bb1106e39917d7167c240c8e7c59a45e19aa3db08429486bced77855f4f5226100ab5f1f8022f802c9297cab9822989fe1fa3283f1454e20ce9e17ef0473a7a71746b1b3a43ef800b3dab4117288d2206c1e4be1965c98f21163ab90864bce9b53f7bc2cdb109a6e5cf23aca2ec221565acfe108fb940a350f1dc7b3ce1451c4b4608836883cb0e5161acb23717c74672e6279e75507ea0b00eec98b6ce622ce816a915c3cc3f1733f368e12ce6b3b24fdfed19195a066fef0d39b1415a1587a4c7777ac954520a6fe3417c6098e761413d966ca0dcf52be80f50ccd4ae764b2b70ebabcdf3dbc036815bac9fac142a1648410a36f0f227565e5b7c0966a85b594c7d7c9d6300b60ea53adf5065eeb80956ce4cc0e5d8af5b0c156facf2605ac9d052397066a2d97f904b80ab5bc7db6f682ca49cdc",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69eec038ea0aa2b64d63a0db"
   },
-  {
-    "username": "maria_g",
-    "email": "maria.garcia@email.com",
-    "role": "editor",
-    "password": "password123"
+  "username": "juan_perez",
+  "email": "juan@ucol.mx",
+  "role": "reader",
+  "salt": "b729861bb036ca13b60fb20edfc983af5c3ffe0f475c89a69f8fb18498337b25",
+  "hash": "213f9ec91fc53cbc44e235a8363f186fa012152c5bf681cc4f958d8632a86e4e6ab46c4d2fd4274938c7f87cc54498257858c04a33423bb3f9f3e6d9be7b9a8d6b4a78050429c5f5df3d1e137369dbcdb248c88e211e14d4fb3297ee515174dba2351109a3e177141cd8aa9f9a909a83fd9bc271045c76d8a58eee2dc7e3fb20e4f5375c127e0537d58bc192c707f76c7c9a3eb6d2b30550928975af3d4d3891e6f0fa231ef466304549bf54e612cb591ce70180a227755f251e49b6a856a62b1d60950d1d4e480d76a436dfd779bb7fb7c4558e850264e8f74bbb345e433bc67e77632c02daca21634e62fc091fa90c827ccf226ecccf3b5e86fa8266715752211669d0b8074763fd90400142d7665dba3663ef4054a597b3b6996fef289364f930b64b4f945f2920a48a640c5a2a0e576a2b32077b721f5f68d9036ace44f0407e6c88a6f3532d4d0baa03c6b04dcbf159cf457c426aa75f65701da96d9edc223909169408ed0c7e21af5851bedddbac090640e5a060baaf77bbc32d7ff5fac1985f5077303455e8f20eaa00a5ec0a6e4a221de00588abfa1a1696f89954b8845266dd5be4b21ce94b5b8bf4e59e4a2b2ac56368af89560f8b234de831b5c8841a5bcf1003ad9358af49204e8701897fd3b908e069214605100fe03602071e1e73ddaa392bec32e48b267eb7a7a48b42800edf50699208c3e3331a94bd28b6",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69eec08de50916d542b04b55"
   },
-  {
-    "username": "pedro_lopez",
-    "email": "pedro.lopez@email.com",
-    "role": "editor",
-    "password": "password123"
-  },
-  {
-    "username": "ana_mtz",
-    "email": "ana.martinez@email.com",
-    "role": "editor",
-    "password": "password123"
-  },
-  {
-    "username": "carlos_rod",
-    "email": "carlos.rodriguez@email.com",
-    "role": "editor",
-    "password": "password123"
-  },
-  {
-    "username": "laura_f",
-    "email": "laura.fernandez@email.com",
-    "role": "editor",
-    "password": "password123"
-  },
-  {
-    "username": "david_s",
-    "email": "david.smith@email.com",
-    "role": "editor",
-    "password": "password123"
-  },
-  {
-    "username": "sarah_j",
-    "email": "sarah.johnson@email.com",
-    "role": "editor",
-    "password": "password123"
-  },
-  {
-    "username": "michael_b",
-    "email": "michael.brown@email.com",
-    "role": "editor",
-    "password": "password123"
-  },
-  {
-    "username": "emily_d",
-    "email": "emily.davis@email.com",
-    "role": "editor",
-    "password": "password123"
-  }
-]
+  "username": "angel",
+  "email": "angel@ucol.mx",
+  "role": "editor",
+  "salt": "71b0b66359dd611e8e98f462ffde2c5d36c0b6ced41a276bac6fc85748c1772d",
+  "hash": "7f0ccc35168776fe1fb7a9855133fb30a393012c9f0c498630cbcd06f293b44b0d839d25d1f36bdb30cdb759207975f7b648df8f333b8cd8b9e2bf75f80060127521d4cd087695625ad2418f323ea2f3f6882cadf3af8b7e5d53ad4e4e0ed91e8f6b26cfcd7295ec1f9539fc1b02f97a2ad123eed4fafae5ff35d0f132d6f3cf9d218708e1b024585fdb999b957b86f325f86002923769d1c3571c6543c9537a9f67ae901d1890dc0ef538e70864e6d25ed6b28fc03ebc18b78c5ff292dba8847ba3f61f95c681d948d2de8f0627c3910f34d6e257875fee260bd80e47c478c7a600d7e6db08f04e9ef1f1a27b187b0ab8fad68ac73caf1329947ee6e5ad0eaa1c5c9bca6d01e2f4a92d7f0018b78ea6fa76668128c044a0098b18128a49a4b1bfb22e085a75c8bf479ae4340e6cfe0671584473284013e636453d4587c45e96bbf419ae7af00a1a33d286c3da0b5f084c37aa1dea4f6f0b393bea64b573d513633a55fb005c76112c45676502d13ee9c06e6dfc9cce843e758cdbc256b0a28a4ab0b704dddff297fee5ca4ac709236c260fe42748a97021cd0f4248562956a5f14a8423b53ef68ae8cee9bf5973e4c04c6039e40be97976e2d8dd0354f9ffcb64696ea24b7d4dc2a4a555081f3efc4a324e21f9ef8fc9d68c09df2b10001568537f8eed0a1b94e6320013555fa0a5302a5c36b8f3e00eff98984bc52e42079e",
+  "__v": 0
+}]
